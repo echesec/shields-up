@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: trusted-base
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+  - git:
+      repoURL: https://github.com/echesec/shields-up.git
+      revision: HEAD
+      directories:
+      - path: apps/*
+  template:
+    metadata:
+      name: '{{.path.basename}}'
+    spec:
+      project: "default"
+      source:
+        repoURL: https://github.com/echesec/shields-up.git
+        targetRevision: HEAD
+        path: '{{.path.path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.path.basename}}'
+      syncPolicy:
+        automated:
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+        - Prune=false
+        - Replace=false

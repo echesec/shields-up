@@ -1,0 +1,14 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: "7472"
+    prometheus.io/scrape: "true"
+  name: prod-pool
+  namespace: metallb
+spec:
+  addresses:
+  - 192.168.1.151-192.168.1.153
+  autoAssign: true
+  avoidBuggyIPs: false
